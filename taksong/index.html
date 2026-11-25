@@ -158,7 +158,7 @@ kakao.maps.load(function(){
   if(line)line.setMap(null);if(P.S&&P.E){line=new kakao.maps.Polyline({map:map,path:[mk.S.getPosition(),mk.E.getPosition()],strokeWeight:4,strokeColor:'#0a5cff',strokeOpacity:.8,strokeStyle:'shortdash'});map.setBounds(b,40,40,40,40)}else map.setCenter(b.getSouthWest());map.relayout()}
  document.getElementById('calc').onclick=function(){if(!(P.S&&P.E))return;
   var straight=new kakao.maps.Polyline({path:[new kakao.maps.LatLng(P.S.lat,P.S.lng),new kakao.maps.LatLng(P.E.lat,P.E.lng)]}).getLength()/1000;
-  var km=straight*(straight<10?1.33:1.24),f=fare(km);
+  var km=straight*(straight<10?1.33:straight<50?1.24:straight<150?1.15:1.2),f=fare(km);
   function lb(x){return x.jb}document.getElementById('rS').textContent=lb(P.S);document.getElementById('rE').textContent=lb(P.E);document.getElementById('rKm').textContent='약 '+km.toFixed(1)+'km';
   document.getElementById('rFare').innerHTML=f?'<small>예상</small> '+won(f):'<small>500km 이상</small> 전화 문의';
   document.getElementById('rPt').style.display=f?'':'none';if(f)document.getElementById('rPt').innerHTML=COIN+'<span>10% 적립 시<br><b>'+won(f/10)+' 적립</b></span>';
