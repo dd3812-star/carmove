@@ -71,6 +71,12 @@ footer a{color:inherit}
 .rinfo b{color:var(--sub);font-weight:800}
 .rinfo span{font-weight:700;color:var(--ink);word-break:keep-all}
 .res .fare{border-top:1px dashed #b8c9e6;padding-top:12px}
+.rinfo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rinfo div{grid-template-columns:76px minmax(0,1fr)}
+.res .fare{white-space:nowrap;font-size:clamp(34px,10vw,56px)}
+.res .fare small{font-size:.55em;vertical-align:.2em}
+.res .pt{text-align:left;line-height:1.35;padding:8px 18px 8px 12px;border-radius:16px}
+.res .pt b{font-size:1.15em}
 </style>
 </head>
 <body>
@@ -140,18 +146,18 @@ function showErr(t){err.textContent=t;err.style.display=t?'block':'none'}
 if(!window.kakao||!kakao.maps){showErr('지도를 불러오지 못했습니다. 1800-8892로 문의해 주세요.');return}
 kakao.maps.load(function(){
  var ps=new kakao.maps.services.Places(),gc=new kakao.maps.services.Geocoder();
- function setP(k,name,addr,lat,lng){P[k]={name:name,addr:addr||'',lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
+ function setP(k,name,addr,lat,lng,jb){P[k]={name:name,addr:addr||'',jb:jb||addr||name,lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
   document.getElementById('q'+k).value=name;document.getElementById('l'+k).hidden=true;draw();document.getElementById('calc').disabled=!(P.S&&P.E);document.getElementById('res').style.display='none'}
  function search(k){var q=document.getElementById('q'+k).value.trim(),ul=document.getElementById('l'+k);showErr('');if(!q)return;
   var S=kakao.maps.services.Status;
-  gc.addressSearch(q,function(r,s2){var A=s2===S.OK?r.slice(0,3).map(function(x){var n=x.road_address?x.road_address.address_name:x.address_name;return{n:x.address_name,a:x.road_address&&x.road_address.address_name!==x.address_name?x.road_address.address_name:'',y:x.y,x:x.x}}):[];
-   ps.keywordSearch(q,function(d,st){var K=st===S.OK?d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,y:x.y,x:x.x}}):[];
+  gc.addressSearch(q,function(r,s2){var A=s2===S.OK?r.slice(0,3).map(function(x){var n=x.road_address?x.road_address.address_name:x.address_name;return{n:x.address_name,a:x.road_address&&x.road_address.address_name!==x.address_name?x.road_address.address_name:'',j:x.address_name,y:x.y,x:x.x}}):[];
+   ps.keywordSearch(q,function(d,st){var K=st===S.OK?d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,j:x.address_name,y:x.y,x:x.x}}):[];
     var all=A.concat(K).slice(0,6);if(all.length)list(k,all);else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}})})}
- function list(k,items){var ul=document.getElementById('l'+k);ul.innerHTML='';items.forEach(function(it){var li=document.createElement('li');li.innerHTML='<b></b><small></small>';li.firstChild.textContent=it.n;li.lastChild.textContent=it.a;li.onclick=function(){setP(k,it.n,it.a,it.y,it.x)};ul.appendChild(li)});ul.hidden=false}
+ function list(k,items){var ul=document.getElementById('l'+k);ul.innerHTML='';items.forEach(function(it){var li=document.createElement('li');li.innerHTML='<b></b><small></small>';li.firstChild.textContent=it.n;li.lastChild.textContent=it.a;li.onclick=function(){setP(k,it.n,it.a,it.y,it.x,it.j)};ul.appendChild(li)});ul.hidden=false}
  document.querySelectorAll('.row button').forEach(function(b){b.onclick=function(){search(b.dataset.k)}});
  ['S','E'].forEach(function(k){document.getElementById('q'+k).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();search(k)}})});
  document.getElementById('gps').onclick=function(){if(!navigator.geolocation)return showErr('이 기기에서는 현재 위치를 쓸 수 없습니다.');
-  navigator.geolocation.getCurrentPosition(function(p){var la=p.coords.latitude,ln=p.coords.longitude;gc.coord2Address(ln,la,function(r,s){var a=s===kakao.maps.services.Status.OK?(r[0].road_address?r[0].road_address.address_name:r[0].address.address_name):'현재 위치';setP('S',a,'',la,ln)})},function(){showErr('현재 위치를 가져오지 못했습니다. 출발지를 직접 입력해 주세요.')},{enableHighAccuracy:true,timeout:8000})};
+  navigator.geolocation.getCurrentPosition(function(p){var la=p.coords.latitude,ln=p.coords.longitude;gc.coord2Address(ln,la,function(r,s){var ok=s===kakao.maps.services.Status.OK,a=ok?(r[0].road_address?r[0].road_address.address_name:r[0].address.address_name):'현재 위치';setP('S',a,'',la,ln,ok?r[0].address.address_name:a)})},function(){showErr('현재 위치를 가져오지 못했습니다. 출발지를 직접 입력해 주세요.')},{enableHighAccuracy:true,timeout:8000})};
  function draw(){var el=document.getElementById('map');if(!P.S&&!P.E)return;el.style.display='block';
   if(!map)map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(37.36,126.93),level:8});
   var b=new kakao.maps.LatLngBounds();['S','E'].forEach(function(k){if(mk[k])mk[k].setMap(null);if(P[k]){var ll=new kakao.maps.LatLng(P[k].lat,P[k].lng);mk[k]=new kakao.maps.Marker({map:map,position:ll});b.extend(ll)}});
@@ -159,9 +165,9 @@ kakao.maps.load(function(){
  document.getElementById('calc').onclick=function(){if(!(P.S&&P.E))return;
   var straight=new kakao.maps.Polyline({path:[new kakao.maps.LatLng(P.S.lat,P.S.lng),new kakao.maps.LatLng(P.E.lat,P.E.lng)]}).getLength()/1000;
   var km=straight*(straight<10?1.33:1.24),f=fare(km);
-  function lb(x){return x.name+(x.addr&&x.addr!==x.name?' ('+x.addr+')':'')}document.getElementById('rS').textContent=lb(P.S);document.getElementById('rE').textContent=lb(P.E);document.getElementById('rKm').textContent='약 '+km.toFixed(1)+'km';
-  document.getElementById('rFare').textContent='예상 '+won(f);
-  document.getElementById('rPt').innerHTML=COIN+'<span>10% 적립 시 '+won(f/10)+' 적립</span>';
+  function lb(x){return x.jb}document.getElementById('rS').textContent=lb(P.S);document.getElementById('rE').textContent=lb(P.E);document.getElementById('rKm').textContent='약 '+km.toFixed(1)+'km';
+  document.getElementById('rFare').innerHTML='<small>예상</small> '+won(f);
+  document.getElementById('rPt').innerHTML=COIN+'<span>10% 적립 시<br><b>'+won(f/10)+' 적립</b></span>';
   var r=document.getElementById('res');r.style.display='block';r.scrollIntoView({behavior:'smooth',block:'center'});
   if(window.gtag)gtag('event','daeribi_calc',{fare:f,km:Math.round(km)})};
 });
