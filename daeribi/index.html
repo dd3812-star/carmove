@@ -66,6 +66,11 @@ td b{color:var(--blue)}
 footer{text-align:center;font-size:14px;color:#5a6875;padding:10px 0 20px}
 footer a{color:inherit}
 .pt-i{width:1.5em;height:1.5em;display:block;flex:none}
+.rinfo{text-align:left;display:grid;gap:8px;margin-bottom:12px;font-size:17px}
+.rinfo div{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:start}
+.rinfo b{color:var(--sub);font-weight:800}
+.rinfo span{font-weight:700;color:var(--ink);word-break:keep-all}
+.res .fare{border-top:1px dashed #b8c9e6;padding-top:12px}
 </style>
 </head>
 <body>
@@ -87,7 +92,7 @@ footer a{color:inherit}
 <button class="calc" id="calc" type="button" disabled>예상 대리비 보기</button>
 <div class="err" id="err"></div>
 <div class="res" id="res">
-<div class="km" id="rKm"></div>
+<div class="rinfo"><div><b>출발지</b><span id="rS"></span></div><div><b>도착지</b><span id="rE"></span></div><div><b>운행 거리</b><span id="rKm"></span></div></div>
 <div class="fare" id="rFare"></div>
 <span class="pt" id="rPt"></span>
 <div class="btns"><a class="bc" href="tel:18008892" id="rCall"><svg class="tel-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg> 전화 접수</a></div>
@@ -135,7 +140,7 @@ function showErr(t){err.textContent=t;err.style.display=t?'block':'none'}
 if(!window.kakao||!kakao.maps){showErr('지도를 불러오지 못했습니다. 1800-8892로 문의해 주세요.');return}
 kakao.maps.load(function(){
  var ps=new kakao.maps.services.Places(),gc=new kakao.maps.services.Geocoder();
- function setP(k,name,addr,lat,lng){P[k]={name:name,lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
+ function setP(k,name,addr,lat,lng){P[k]={name:name,addr:addr||'',lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
   document.getElementById('q'+k).value=name;document.getElementById('l'+k).hidden=true;draw();document.getElementById('calc').disabled=!(P.S&&P.E);document.getElementById('res').style.display='none'}
  function search(k){var q=document.getElementById('q'+k).value.trim(),ul=document.getElementById('l'+k);showErr('');if(!q)return;
   ps.keywordSearch(q,function(d,st){if(st===kakao.maps.services.Status.OK)return list(k,d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,y:x.y,x:x.x}}));
@@ -152,7 +157,7 @@ kakao.maps.load(function(){
  document.getElementById('calc').onclick=function(){if(!(P.S&&P.E))return;
   var straight=new kakao.maps.Polyline({path:[new kakao.maps.LatLng(P.S.lat,P.S.lng),new kakao.maps.LatLng(P.E.lat,P.E.lng)]}).getLength()/1000;
   var km=straight*(straight<10?1.33:1.24),f=fare(km);
-  document.getElementById('rKm').textContent=P.S.name+' → '+P.E.name+' · 약 '+km.toFixed(1)+'km';
+  function lb(x){return x.name+(x.addr&&x.addr!==x.name?' ('+x.addr+')':'')}document.getElementById('rS').textContent=lb(P.S);document.getElementById('rE').textContent=lb(P.E);document.getElementById('rKm').textContent='약 '+km.toFixed(1)+'km';
   document.getElementById('rFare').textContent='예상 '+won(f);
   document.getElementById('rPt').innerHTML=COIN+'<span>10% 적립 시 '+won(f/10)+' 적립</span>';
   var r=document.getElementById('res');r.style.display='block';r.scrollIntoView({behavior:'smooth',block:'center'});
