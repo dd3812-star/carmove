@@ -143,8 +143,10 @@ kakao.maps.load(function(){
  function setP(k,name,addr,lat,lng){P[k]={name:name,addr:addr||'',lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
   document.getElementById('q'+k).value=name;document.getElementById('l'+k).hidden=true;draw();document.getElementById('calc').disabled=!(P.S&&P.E);document.getElementById('res').style.display='none'}
  function search(k){var q=document.getElementById('q'+k).value.trim(),ul=document.getElementById('l'+k);showErr('');if(!q)return;
-  ps.keywordSearch(q,function(d,st){if(st===kakao.maps.services.Status.OK)return list(k,d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,y:x.y,x:x.x}}));
-   gc.addressSearch(q,function(r,s2){if(s2===kakao.maps.services.Status.OK)list(k,r.slice(0,5).map(function(x){return{n:x.address_name,a:'',y:x.y,x:x.x}}));else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}})})}
+  var S=kakao.maps.services.Status;
+  gc.addressSearch(q,function(r,s2){var A=s2===S.OK?r.slice(0,3).map(function(x){var n=x.road_address?x.road_address.address_name:x.address_name;return{n:x.address_name,a:x.road_address&&x.road_address.address_name!==x.address_name?x.road_address.address_name:'',y:x.y,x:x.x}}):[];
+   ps.keywordSearch(q,function(d,st){var K=st===S.OK?d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,y:x.y,x:x.x}}):[];
+    var all=A.concat(K).slice(0,6);if(all.length)list(k,all);else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}})})}
  function list(k,items){var ul=document.getElementById('l'+k);ul.innerHTML='';items.forEach(function(it){var li=document.createElement('li');li.innerHTML='<b></b><small></small>';li.firstChild.textContent=it.n;li.lastChild.textContent=it.a;li.onclick=function(){setP(k,it.n,it.a,it.y,it.x)};ul.appendChild(li)});ul.hidden=false}
  document.querySelectorAll('.row button').forEach(function(b){b.onclick=function(){search(b.dataset.k)}});
  ['S','E'].forEach(function(k){document.getElementById('q'+k).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();search(k)}})});
