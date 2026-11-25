@@ -36,14 +36,14 @@ h1{margin:0 0 8px;font-size:clamp(30px,6vw,44px);font-weight:900;line-height:1.2
 .row button{font:inherit;font-weight:800;font-size:17px;padding:0 16px;border:0;border-radius:10px;background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap}
 .gps{margin-top:6px;background:none;border:0;color:var(--blue);font:inherit;font-weight:700;font-size:16px;cursor:pointer;padding:4px 0}
 .list{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
-.list li{padding:11px 14px;border-top:1px solid var(--line);cursor:pointer;font-size:17px}
+.list li{overflow-wrap:anywhere;padding:11px 14px;border-top:1px solid var(--line);cursor:pointer;font-size:17px}
 .list li:first-child{border-top:0}.list li:hover{background:#eef4ff}
 .list small{display:block;color:#5a6875;font-size:14px}
 .pick{margin-top:6px;font-size:15px;color:#0b7a3b;font-weight:700}
 #map{height:240px;border-radius:10px;border:1px solid var(--line);margin:4px 0 16px;display:none}
 .calc{width:100%;font:inherit;font-size:22px;font-weight:900;padding:16px;border:0;border-radius:12px;background:var(--blue);color:#fff;cursor:pointer}
 .calc:disabled{background:#9db8e8;cursor:default}
-.res{display:none;margin-top:18px;border:3px solid var(--blue);border-radius:14px;padding:20px;text-align:center;background:#f5f9ff}
+.res{display:none;overflow:hidden;margin-top:18px;border:3px solid var(--blue);border-radius:14px;padding:20px;text-align:center;background:#f5f9ff}
 .res .km{font-size:17px;color:var(--sub);font-weight:600}
 .res .fare{font-size:clamp(40px,10vw,56px);font-weight:900;color:var(--blue);line-height:1.2;margin:6px 0}
 .res .pt{display:inline-flex;align-items:center;gap:8px;background:var(--yel);font-weight:800;font-size:18px;padding:6px 14px;border-radius:999px}
@@ -151,8 +151,9 @@ kakao.maps.load(function(){
  function search(k){var q=document.getElementById('q'+k).value.trim(),ul=document.getElementById('l'+k);showErr('');if(!q)return;
   var S=kakao.maps.services.Status;
   gc.addressSearch(q,function(r,s2){var A=s2===S.OK?r.slice(0,3).map(function(x){var n=x.road_address?x.road_address.address_name:x.address_name;return{n:x.address_name,a:x.road_address&&x.road_address.address_name!==x.address_name?x.road_address.address_name:'',j:x.address_name,y:x.y,x:x.x}}):[];
+   var o=P[k==='S'?'E':'S']||P[k],opt=o?{location:new kakao.maps.LatLng(o.lat,o.lng),sort:kakao.maps.services.SortBy.DISTANCE}:{};
    ps.keywordSearch(q,function(d,st){var K=st===S.OK?d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,j:x.address_name,y:x.y,x:x.x}}):[];
-    var all=A.concat(K).slice(0,6);if(all.length)list(k,all);else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}})})}
+    var all=A.concat(K).slice(0,6);if(all.length)list(k,all);else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}},opt)})}
  function list(k,items){var ul=document.getElementById('l'+k);ul.innerHTML='';items.forEach(function(it){var li=document.createElement('li');li.innerHTML='<b></b><small></small>';li.firstChild.textContent=it.n;li.lastChild.textContent=it.a;li.onclick=function(){setP(k,it.n,it.a,it.y,it.x,it.j)};ul.appendChild(li)});ul.hidden=false}
  document.querySelectorAll('.row button').forEach(function(b){b.onclick=function(){search(b.dataset.k)}});
  ['S','E'].forEach(function(k){document.getElementById('q'+k).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();search(k)}})});
