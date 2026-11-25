@@ -150,7 +150,7 @@ kakao.maps.load(function(){
   if(line)line.setMap(null);if(P.S&&P.E){line=new kakao.maps.Polyline({map:map,path:[mk.S.getPosition(),mk.E.getPosition()],strokeWeight:4,strokeColor:'#0a5cff',strokeOpacity:.8,strokeStyle:'shortdash'});map.setBounds(b,40,40,40,40)}else map.setCenter(b.getSouthWest());map.relayout()}
  document.getElementById('calc').onclick=function(){if(!(P.S&&P.E))return;
   var straight=new kakao.maps.Polyline({path:[new kakao.maps.LatLng(P.S.lat,P.S.lng),new kakao.maps.LatLng(P.E.lat,P.E.lng)]}).getLength()/1000;
-  var km=straight*(straight<10?1.4:1.3),f=fare(km);
+  var km=straight*(straight<10?1.33:1.24),f=fare(km);
   document.getElementById('rKm').textContent=P.S.name+' → '+P.E.name+' · 약 '+km.toFixed(1)+'km';
   document.getElementById('rFare').textContent='예상 '+won(f);
   document.getElementById('rPt').textContent='💰 10% 적립 시 '+won(f/10)+' 적립';
