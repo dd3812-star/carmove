@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>탁송비 계산기 | 카무브 자동차 탁송 요금 조회</title>
+<meta name="description" content="출발지와 도착지를 입력하면 카무브 자동차 탁송 예상 요금을 바로 알려드립니다. 전국 탁송, 중고차 딜러 탁송, 이용요금 10% 마일리지 적립, 365일 24시간 1800-8892.">
+<link rel="canonical" href="https://carmove.kr/taksong/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="카무브 탁송비 계산기">
+<meta property="og:description" content="출발지·도착지 입력하면 예상 탁송비 바로 확인 · 전국 탁송 · 10% 적립 · 1800-8892">
+<meta property="og:url" content="https://carmove.kr/taksong/">
+<meta property="og:image" content="https://carmove.kr/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S2SNL0V3YN"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-S2SNL0V3YN');</script>
+<style>
+:root{--ink:#14202b;--sub:#33414e;--line:#d9e0e6;--bg:#f3f5f7;--yel:#ffe554;--blue:#0a5cff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;line-height:1.6;word-break:keep-all;padding-bottom:84px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+.logo img{height:34px;display:block}
+.hcall{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-weight:800;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:17px}
+.tel-i{width:1.2em;height:1.2em;fill:#e8202a;flex:none}
+.hero{background:var(--yel);padding:34px 0 30px}
+h1{margin:0 0 8px;font-size:clamp(30px,6vw,44px);font-weight:900;line-height:1.2}
+.hero p{margin:0;font-size:19px;color:var(--sub);font-weight:500}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin:-14px 0 22px;box-shadow:0 6px 20px rgba(20,32,43,.08)}
+.fld{margin-bottom:16px;position:relative}
+.fld label{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;margin-bottom:6px}
+.dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:900}
+.dot.s{background:var(--blue)}.dot.e{background:#e8202a}
+.row{display:flex;gap:8px}
+.row input{flex:1;min-width:0;font:inherit;font-size:19px;font-weight:600;padding:13px 14px;border:2px solid var(--ink);border-radius:10px}
+.row button{font:inherit;font-weight:800;font-size:17px;padding:0 16px;border:0;border-radius:10px;background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap}
+.gps{margin-top:6px;background:none;border:0;color:var(--blue);font:inherit;font-weight:700;font-size:16px;cursor:pointer;padding:4px 0}
+.list{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.list li{overflow-wrap:anywhere;padding:11px 14px;border-top:1px solid var(--line);cursor:pointer;font-size:17px}
+.list li:first-child{border-top:0}.list li:hover{background:#eef4ff}
+.list small{display:block;color:#5a6875;font-size:14px}
+.pick{margin-top:6px;font-size:15px;color:#0b7a3b;font-weight:700}
+#map{height:240px;border-radius:10px;border:1px solid var(--line);margin:4px 0 16px;display:none}
+.calc{width:100%;font:inherit;font-size:22px;font-weight:900;padding:16px;border:0;border-radius:12px;background:var(--blue);color:#fff;cursor:pointer}
+.calc:disabled{background:#9db8e8;cursor:default}
+.res{display:none;overflow:hidden;margin-top:18px;border:3px solid var(--blue);border-radius:14px;padding:20px;text-align:center;background:#f5f9ff}
+.res .km{font-size:17px;color:var(--sub);font-weight:600}
+.res .fare{font-size:clamp(40px,10vw,56px);font-weight:900;color:var(--blue);line-height:1.2;margin:6px 0}
+.res .pt{display:inline-flex;align-items:center;gap:8px;background:var(--yel);font-weight:800;font-size:18px;padding:6px 14px;border-radius:999px}
+.res .btns{display:grid;grid-template-columns:1fr;gap:10px;margin-top:16px}
+.res .btns a{display:flex;align-items:center;justify-content:center;gap:6px;padding:15px 8px;border-radius:10px;font-weight:900;font-size:19px;text-decoration:none}
+.bc{background:var(--blue);color:#fff}.bk{background:#fee500;color:#191919}
+.res .nt{margin:14px 0 0;font-size:14px;color:#5a6875}
+.err{color:#c4161c;font-weight:700;margin-top:8px;display:none}
+section{margin:0 0 22px}
+h2{font-size:24px;margin:0 0 10px}
+.box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+table{width:100%;border-collapse:collapse;font-size:17px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:center}
+th{background:var(--ink);color:#fff}
+td b{color:var(--blue)}
+.box ul{margin:0;padding-left:20px;font-size:17px}
+.box p{margin:0 0 8px;font-size:17px}
+.mbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(20,32,43,.96);z-index:20}
+.mbar a{display:flex;align-items:center;justify-content:center;gap:6px;height:52px;border-radius:10px;font-weight:900;font-size:18px;text-decoration:none}
+footer{text-align:center;font-size:14px;color:#5a6875;padding:10px 0 20px}
+footer a{color:inherit}
+.pt-i{width:1.5em;height:1.5em;display:block;flex:none}
+.rinfo{text-align:left;display:grid;gap:8px;margin-bottom:12px;font-size:17px}
+.rinfo div{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:start}
+.rinfo b{color:var(--sub);font-weight:800}
+.rinfo span{font-weight:700;color:var(--ink);word-break:keep-all}
+.res .fare{border-top:1px dashed #b8c9e6;padding-top:12px}
+.rinfo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rinfo div{grid-template-columns:76px minmax(0,1fr)}
+.res .fare{white-space:nowrap;font-size:clamp(34px,10vw,56px)}
+.res .fare small{font-size:.55em;vertical-align:.2em}
+.res .pt{text-align:left;line-height:1.35;padding:8px 18px 8px 12px;border-radius:16px}
+.res .pt b{font-size:1.15em}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="/" aria-label="카무브 CarMove"><img src="data:image/png;base64,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" alt="CarMove 카무브" height="30"></a><a class="hcall" href="tel:18008892"><svg class="tel-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg> 1800-8892</a></div></header>
+<div class="hero"><div class="wrap">
+<h1>탁송비 계산기</h1>
+<p>출발지와 도착지를 입력하면 카무브 자동차 탁송 예상 요금을 바로 알려드립니다.</p>
+</div></div>
+<main class="wrap">
+<div class="card">
+<div class="fld" id="fS"><label><span class="dot s">출</span>출발지</label>
+<div class="row"><input id="qS" placeholder="예: 매매단지, 경매장, 주소" autocomplete="off"><button type="button" data-k="S">검색</button></div>
+<button class="gps" type="button" id="gps">📍 현재 위치에서 출발</button>
+<ul class="list" id="lS" hidden></ul><div class="pick" id="pS"></div></div>
+<div class="fld" id="fE"><label><span class="dot e">도</span>도착지</label>
+<div class="row"><input id="qE" placeholder="예: 정비소, 수출단지, 주소" autocomplete="off"><button type="button" data-k="E">검색</button></div>
+<ul class="list" id="lE" hidden></ul><div class="pick" id="pE"></div></div>
+<div id="map"></div>
+<button class="calc" id="calc" type="button" disabled>예상 탁송비 보기</button>
+<div class="err" id="err"></div>
+<div class="res" id="res">
+<div class="rinfo"><div><b>출발지</b><span id="rS"></span></div><div><b>도착지</b><span id="rE"></span></div><div><b>운행 거리</b><span id="rKm"></span></div></div>
+<div class="fare" id="rFare"></div>
+<span class="pt" id="rPt"></span>
+<div class="btns"><a class="bc" href="tel:18008892" id="rCall"><svg class="tel-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg> 전화 접수</a></div>
+<p class="nt">※ 주간 기준 예상 요금입니다. 야간·주말, 긴급 배차, 대기·경유, 차종, 도착지 복귀 여건에 따라 달라질 수 있으며 주유비는 별도입니다. 정확한 금액은 1800-8892로 문의해 주세요.</p>
+</div>
+</div>
+
+<section><h2>카무브 탁송비 기준 (주간)</h2><div class="box">
+<table><thead><tr><th>이동 거리</th><th>예상 탁송비</th></tr></thead><tbody><tr><td>0~4km</td><td><b>15,000원</b></td></tr><tr><td>4~6km</td><td><b>20,000원</b></td></tr><tr><td>6~12km</td><td><b>20,000원</b></td></tr><tr><td>12~25km</td><td><b>25,000원</b></td></tr><tr><td>25~35km</td><td><b>30,000원</b></td></tr><tr><td>35~45km</td><td><b>35,000원</b></td></tr><tr><td>45~55km</td><td><b>40,000원</b></td></tr><tr><td>55~70km</td><td><b>50,000원</b></td></tr><tr><td>70~80km</td><td><b>55,000원</b></td></tr><tr><td>80~90km</td><td><b>60,000원</b></td></tr><tr><td>90~100km</td><td><b>70,000원</b></td></tr><tr><td>100~130km</td><td><b>80,000원</b></td></tr><tr><td>130~150km</td><td><b>90,000원</b></td></tr><tr><td>150~200km</td><td><b>100,000원</b></td></tr><tr><td>200~230km</td><td><b>120,000원</b></td></tr><tr><td>230~250km</td><td><b>120,000원</b></td></tr><tr><td>250~320km</td><td><b>130,000원</b></td></tr><tr><td>320~350km</td><td><b>130,000원</b></td></tr><tr><td>350~400km</td><td><b>140,000원</b></td></tr><tr><td>400~450km</td><td><b>150,000원</b></td></tr><tr><td>450~500km</td><td><b>150,000원</b></td></tr></tbody></table>
+<p style="margin-top:12px">이동 거리에 따른 주간 기준 요금입니다. 500km 이상, 특수 차량은 전화로 문의해 주세요.</p>
+</div></section>
+
+<section><h2>카무브 탁송 혜택</h2><div class="box"><ul>
+<li><b>이용요금 10% 마일리지 적립</b> (1800-8892 이용 시)</li>
+<li>탁송 사고 시 위로금 최대 100만원 (시범운영)</li>
+<li>전 직원 탁송 보험 가입, 카드결제 가능</li>
+<li>사업자·법인 세금계산서 발행 (1866-2933)</li>
+</ul></div></section>
+
+<section><h2>탁송비 계산 안내</h2><div class="box">
+<p>탁송비(자동차 탁송 비용)는 출발지에서 도착지까지 기사님이 직접 운전해 차를 옮기는 거리를 기준으로 정해집니다. 카무브 탁송비 계산기는 입력한 두 지점 사이의 도로 거리를 추정해 예상 요금을 보여드립니다.</p>
+<p>중고차 딜러 매입·판매 탁송, 매매단지 차량 이동, 경매장 출품, 수출단지, 정비소·검사소 왕복, 이사 탁송, 공항·KTX역 탁송까지 전국 어디든 가능합니다.</p>
+<p>야간·주말·긴급 배차, 대기 시간, 경유지가 있으면 요금이 달라질 수 있고 주유비는 별도입니다. 주요 도시 간 요금은 <a href="/#price">전국 탁송 요금표</a>에서도 확인할 수 있습니다.</p>
+</div></section>
+</main>
+<footer>카무브 탁송·대리운전 · 대표 최혜리 · 사업자등록번호 707-36-01069<br><a href="/">카무브 홈으로</a> · <a href="/privacy.html">개인정보처리방침</a></footer>
+<nav class="mbar"><a class="bc" href="tel:18008892"><svg class="tel-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg> 전화 1800-8892</a></nav>
+
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=1a46eee9557814c61fd43746153c89ba&libraries=services&autoload=false"></script>
+<script>
+(function(){
+var TB=[[4,15000],[6,20000],[12,20000],[25,25000],[35,30000],[45,35000],[55,40000],[70,50000],[80,55000],[90,60000],[100,70000],[130,80000],[150,90000],[200,100000],[230,120000],[250,120000],[320,130000],[350,130000],[400,140000],[450,150000],[500,150000]];function fare(km){for(var i=0;i<TB.length;i++)if(km<=TB[i][0])return TB[i][1];return 0}
+var COIN='<svg class="pt-i" viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="24" rx="18" ry="13" fill="#b88a00" stroke="#14202b" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="18" ry="13" fill="#ffe14d" stroke="#14202b" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="13" ry="9" fill="#ffd000" stroke="#c99a00" stroke-width="1.4"/><text x="21" y="25.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="15" fill="#9a9a9a">P</text><text x="20" y="25" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="15" fill="#fff">P</text></svg>';function won(n){return n.toLocaleString('ko-KR')+'원'}
+var P={S:null,E:null},map,mk={},line,err=document.getElementById('err');
+function showErr(t){err.textContent=t;err.style.display=t?'block':'none'}
+if(!window.kakao||!kakao.maps){showErr('지도를 불러오지 못했습니다. 1800-8892로 문의해 주세요.');return}
+kakao.maps.load(function(){
+ var ps=new kakao.maps.services.Places(),gc=new kakao.maps.services.Geocoder();
+ function setP(k,name,addr,lat,lng,jb){P[k]={name:name,addr:addr||'',jb:jb||addr||name,lat:+lat,lng:+lng};document.getElementById('p'+k).textContent='✔ '+name+(addr&&addr!==name?' ('+addr+')':'');
+  document.getElementById('q'+k).value=name;document.getElementById('l'+k).hidden=true;draw();document.getElementById('calc').disabled=!(P.S&&P.E);document.getElementById('res').style.display='none'}
+ function search(k){var q=document.getElementById('q'+k).value.trim(),ul=document.getElementById('l'+k);showErr('');if(!q)return;
+  var S=kakao.maps.services.Status;
+  gc.addressSearch(q,function(r,s2){var A=s2===S.OK?r.slice(0,3).map(function(x){var n=x.road_address?x.road_address.address_name:x.address_name;return{n:x.address_name,a:x.road_address&&x.road_address.address_name!==x.address_name?x.road_address.address_name:'',j:x.address_name,y:x.y,x:x.x}}):[];
+   var o=P[k==='S'?'E':'S']||P[k],opt=o?{location:new kakao.maps.LatLng(o.lat,o.lng),sort:kakao.maps.services.SortBy.DISTANCE}:{};
+   ps.keywordSearch(q,function(d,st){var K=st===S.OK?d.slice(0,5).map(function(x){return{n:x.place_name,a:x.road_address_name||x.address_name,j:x.address_name,y:x.y,x:x.x}}):[];
+    var all=A.concat(K).slice(0,6);if(all.length)list(k,all);else{ul.hidden=true;showErr('검색 결과가 없습니다. 장소 이름이나 주소를 다시 입력해 주세요.')}},opt)})}
+ function list(k,items){var ul=document.getElementById('l'+k);ul.innerHTML='';items.forEach(function(it){var li=document.createElement('li');li.innerHTML='<b></b><small></small>';li.firstChild.textContent=it.n;li.lastChild.textContent=it.a;li.onclick=function(){setP(k,it.n,it.a,it.y,it.x,it.j)};ul.appendChild(li)});ul.hidden=false}
+ document.querySelectorAll('.row button').forEach(function(b){b.onclick=function(){search(b.dataset.k)}});
+ ['S','E'].forEach(function(k){document.getElementById('q'+k).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();search(k)}})});
+ document.getElementById('gps').onclick=function(){if(!navigator.geolocation)return showErr('이 기기에서는 현재 위치를 쓸 수 없습니다.');
+  navigator.geolocation.getCurrentPosition(function(p){var la=p.coords.latitude,ln=p.coords.longitude;gc.coord2Address(ln,la,function(r,s){var ok=s===kakao.maps.services.Status.OK,a=ok?(r[0].road_address?r[0].road_address.address_name:r[0].address.address_name):'현재 위치';setP('S',a,'',la,ln,ok?r[0].address.address_name:a)})},function(){showErr('현재 위치를 가져오지 못했습니다. 출발지를 직접 입력해 주세요.')},{enableHighAccuracy:true,timeout:8000})};
+ function draw(){var el=document.getElementById('map');if(!P.S&&!P.E)return;el.style.display='block';
+  if(!map)map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(37.36,126.93),level:8});
+  var b=new kakao.maps.LatLngBounds();['S','E'].forEach(function(k){if(mk[k])mk[k].setMap(null);if(P[k]){var ll=new kakao.maps.LatLng(P[k].lat,P[k].lng);mk[k]=new kakao.maps.Marker({map:map,position:ll});b.extend(ll)}});
+  if(line)line.setMap(null);if(P.S&&P.E){line=new kakao.maps.Polyline({map:map,path:[mk.S.getPosition(),mk.E.getPosition()],strokeWeight:4,strokeColor:'#0a5cff',strokeOpacity:.8,strokeStyle:'shortdash'});map.setBounds(b,40,40,40,40)}else map.setCenter(b.getSouthWest());map.relayout()}
+ document.getElementById('calc').onclick=function(){if(!(P.S&&P.E))return;
+  var straight=new kakao.maps.Polyline({path:[new kakao.maps.LatLng(P.S.lat,P.S.lng),new kakao.maps.LatLng(P.E.lat,P.E.lng)]}).getLength()/1000;
+  var km=straight*(straight<10?1.33:1.24),f=fare(km);
+  function lb(x){return x.jb}document.getElementById('rS').textContent=lb(P.S);document.getElementById('rE').textContent=lb(P.E);document.getElementById('rKm').textContent='약 '+km.toFixed(1)+'km';
+  document.getElementById('rFare').innerHTML=f?'<small>예상</small> '+won(f):'<small>500km 이상</small> 전화 문의';
+  document.getElementById('rPt').style.display=f?'':'none';if(f)document.getElementById('rPt').innerHTML=COIN+'<span>10% 적립 시<br><b>'+won(f/10)+' 적립</b></span>';
+  var r=document.getElementById('res');r.style.display='block';r.scrollIntoView({behavior:'smooth',block:'center'});
+  if(window.gtag)gtag('event','taksong_calc',{fare:f,km:Math.round(km)})};
+});
+})();
+</script>
+</body>
+</html>
