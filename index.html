@@ -295,6 +295,19 @@ footer{color:#d3dbe3;font-size:15px}footer .biz{color:#c3cdd7;font-size:14px}
 .kk .kbtn{font-size:20px;padding:14px 26px}
 @media(min-width:701px){.perks div{padding:22px 24px;gap:16px}.perks b{font-size:23px}.perks span{font-size:18px}.perks em{font-size:36px}.wbtn{font-size:21px;padding:16px 30px}.kk .kbtn{font-size:22px;padding:16px 30px}}
 @media(max-width:700px){.wl .how .hsep{display:none}.wl .how .hn{display:block}.wl .how .hn:last-child{display:inline}}
+/* 요금 찾기 */
+.pf{margin:8px 0 22px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:22px}
+.pf h3{margin:0 0 14px;font-size:22px}
+.pfsel{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.pfsel label{display:flex;flex-direction:column;font-size:15px;font-weight:600;color:var(--sub);gap:4px;flex:1;min-width:120px}
+.pfsel select{font:inherit;font-size:20px;font-weight:700;color:var(--ink);padding:10px 12px;border:2px solid #14202b;border-radius:8px;background:#fff}
+.pfx{font-size:24px;font-weight:900;padding-bottom:10px}
+.pfout{margin:16px 0;background:#fff;border:2px solid #0a5cff;border-radius:10px;padding:16px;text-align:center;font-size:20px;font-weight:700;color:#14202b;line-height:1.6}
+.pfout b{font-size:30px;font-weight:900;color:#0a5cff;margin-left:6px}
+.pfimg{display:block;text-decoration:none;color:var(--ink)}
+.pfimg img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--line)}
+.pfimg span{display:block;text-align:center;margin-top:8px;font-size:16px;font-weight:700}
+@media(min-width:701px){.pf{padding:30px}.pf h3{font-size:28px}.pfout{font-size:24px}.pfout b{font-size:36px}}
 </style>
 </head>
 <body>
@@ -540,8 +553,23 @@ footer{color:#d3dbe3;font-size:15px}footer .biz{color:#c3cdd7;font-size:14px}
 <div><span>기본요금/시내</span><b>12,000원~</b></div>
 <div><span>인접 시</span><b>25,000원~</b></div>
 <div><span>전국 주요 도시</span><b>60,000원~</b></div>
-<div><span>서울 ↔ 부산</span><b>120,000원~</b></div>
+<div><span>서울 ↔ 부산</span><b>110,000원~</b></div>
 </div>
+<div class="pf">
+<h3>구간별 탁송 요금 찾기</h3>
+<div class="pfsel"><label>지역<select id="pfA"><option>서울</option><option>인천</option><option>수원</option><option>천안</option><option>청주</option><option>대전</option><option>익산</option><option>전주</option><option>군산</option><option>광주</option><option>목포</option><option>여수/순천</option><option>강릉</option><option>원주</option><option>통영/거제</option><option>구미/안동</option><option>대구</option><option>포항</option><option>창원</option><option>울산</option><option>부산</option></select></label><span class="pfx">↔</span><label>지역<select id="pfB"><option>서울</option><option>인천</option><option>수원</option><option>천안</option><option>대전</option><option>대구</option><option>부산</option><option>울산</option><option>창원</option><option>전주</option><option>광주</option><option>여수</option><option>목포</option></select></label></div>
+<div class="pfout" id="pfOut" aria-live="polite"></div>
+<a class="pfimg" href="price-table.jpg" target="_blank" rel="noopener"><img src="price-table.jpg" alt="카무브 전국 탁송 요금표 (서울·인천·수원·천안·대전·대구·부산·울산·창원·전주·광주·여수·목포 구간별 요금)" loading="lazy" width="2000" height="1395"><span>🔍 누르면 요금표 크게 보기</span></a>
+</div>
+<script>
+(function(){var D={"cols":["서울","인천","수원","천안","대전","대구","부산","울산","창원","전주","광주","여수","목포"],"rows":{"서울":["15","20","25","50","65","90","110","110","110","80","90","110","110"],"인천":["20","15","30","50","70","90","110","110","110","80","90","110","110"],"수원":["25","30","15","40","55","90","110","110","110","80","90","110","110"],"천안":["50","50","40","20","45","80","100","110","110","70","80","100","100"],"청주":["60","65","50","40","40","70","90","100","100","60","80","90","90"],"대전":["65","70","55","45","15","70","90","90","90","50","70","90","80"],"익산":["80","80","80","60","50","80","90","90","90","35","60","80","80"],"전주":["80","80","80","60","50","80","90","100","90","20","60","70","70"],"군산":["80","80","80","70","60","90","100","110","100","40","60","80","70"],"광주":["90","90","90","80","70","90","90","100","90","60","20","70","60"],"목포":["110","110","110","90","80","100","100","110","100","70","60","80","20"],"여수/순천":["110","110","110","90","80","90","90","100","90","80/70","70/60","20","80"],"강릉":["90","90","90","90","100","110","130","130","130","120","130","130","130"],"원주":["60","70","60","70","80","90","120","120","120","110","130","140","140"],"통영/거제":["120","120","120","100","90","80","80/70","90/80","70/60","100","100","90/80","100"],"구미/안동":["90","90","90","70","60","40/70","70/100","70/100","70/100","90/100","90/100","100","100"],"대구":["90","90","90","80","70","20","60","60","60","80","90","90","100"],"포항":["110","110","110","90","80","60","70","50","70","100","110","100","120"],"창원":["110","110","110","100","90","60","40","60","20","90","90","90","110"],"울산":["110","110","110","90","90","60","50","20","60","100","100","100","110"],"부산":["110","110","110","100","90","60","20","50","40","90","90","90","100"]}};var a=document.getElementById('pfA'),b=document.getElementById('pfB'),o=document.getElementById('pfOut');
+function w(n){return (n*1000).toLocaleString('ko-KR')+'원~'}
+function up(){var v=D.rows[a.value][D.cols.indexOf(b.value)];var h;
+if(v.indexOf('/')>0){var n=a.value.split('/'),p=v.split('/');h=n[0]+' ↔ '+b.value+' <b>'+w(+p[0])+'</b><br>'+n[1]+' ↔ '+b.value+' <b>'+w(+p[1])+'</b>'}
+else h=a.value+' ↔ '+b.value+' <b>'+w(+v)+'</b>';o.innerHTML=h;
+if(window.gtag)gtag('event','price_lookup',{route:a.value+'-'+b.value})}
+a.value='서울';b.value='부산';a.onchange=b.onchange=up;up();})();
+</script>
 <div class="info">ⓘ 위 요금은 표준 안내 기준이며, 출발지·도착지 상세 주소 및 기사 배치 상황에 따라 달라질 수 있습니다. 정확한 금액은 <a href="tel:18008892">1800-8892</a>로 문의해 주세요.</div>
 </div></div></section>
 
